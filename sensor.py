@@ -1,5 +1,5 @@
 """
-This file contains the code for extracting data from the bm680 sensor. The file should be run from the
+This file contains the code for extracting data from the bme680 sensor. The file should be run from the
 raspberry pi that is connected to the sensor.
 
 The file can be run in two different modes:
@@ -12,7 +12,7 @@ import bme680
 import time
 import sys
 
-# Creating the sensor object that represents the bm680 sensor.
+# Creating the sensor object that represents the bme680 sensor.
 sensor = bme680.BME680()
 
 # Oversample settings set the trade-off between accuracy and noise. Higher oversampling = less noise, less accuracy.
