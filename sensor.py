@@ -29,34 +29,39 @@ sensor.set_gas_heater_temperature(320)
 sensor.set_gas_heater_duration(150)
 sensor.select_gas_heater_profile(0)
 
-# First print the csv header if we are not printing human readable data.
-if sys.argv[0] != "readable":
-    print("temperature,air_pressure,humidity,gas_resistance,air_quality")
 
-# Printing the readable data in an infinite loop.
-while True:
-    if sensor.get_sensor_data():
-        # We configure the output based on the command line argument.
-        if sys.argv[0] == "readable":
-            # Readable format.
-            output = "{0:.2f} C, {1:.2f} hPa, {2:.2f} %RH".format(sensor.data.temperature, sensor.data.pressure,
-                                                                  sensor.data.humidity)
-        else:
-            # csv format.
-            output = "{0:.2f},{1:.2f},{2:.2f}".format(sensor.data.temperature, sensor.data.pressure,
-                                                      sensor.data.humidity)
+def get_base_data(output_mode):
+    output = ""
+    # First print the csv header if we are not printing human readable data.
+    if output_mode != "readable":
+        print("temperature,air_pressure,humidity,gas_resistance,air_quality\n")
 
-        # Since the gas resistance data is dependant on the hot plate we ensure that it is stable before reading.
-        if sensor.data.heat_stable:
-            if sys.argv[0] == "readable":
+    # Printing the readable data in an infinite loop.
+    while True:
+        if sensor.get_sensor_data():
+            # We configure the output based on the command line argument.
+            if output_mode == "readable":
                 # Readable format.
-                print("{0}, {1} Ohms".format(output, sensor.data.gas_resistance))
+                output += "{0:.2f} C, {1:.2f} hPa, {2:.2f} %RH".format(sensor.data.temperature, sensor.data.pressure,
+                                                                       sensor.data.humidity)
             else:
                 # csv format.
-                print("{0},{1}".format(output, sensor.data.gas_resistance))
-        else:
-            print(output)
+                output += "{0:.2f},{1:.2f},{2:.2f}".format(sensor.data.temperature, sensor.data.pressure,
+                                                           sensor.data.humidity)
 
-    time.sleep(1)
+            # Since the gas resistance data is dependant on the hot plate we ensure that it is stable before reading.
+            if sensor.data.heat_stable:
+                if output_mode == "readable":
+                    # Readable format.
+                    output += sensor.data.gas_resistance + "Ohms\n"
+                else:
+                    # csv format.
+                    output += sensor.data.gas_resistance + "\n"
+            else:
+                output += "\n"
+
+        print(output)
+
+        time.sleep(1)
 
 # TODO: Add air quality to both outputs. Could be done by adding an "get_air_quality" function.
