@@ -30,34 +30,71 @@ sensor.set_gas_heater_duration(150)
 sensor.select_gas_heater_profile(0)
 
 
-def get_sensor_data(output_mode):
+def get_sensor_data(output_mode, calculate_air_quality):
     """
     Uses the bme680 sensor to find and output the data that the sensor supports. This includes temperature (C),
-    air pressure (hPa), humidity (%RH), gas resistance (Ohms) and air quality (%).
+    air pressure (hPa), humidity (%RH), gas resistance (Ohms) and if specified, air quality (%).
 
     :param output_mode: The format of the output data, if "readable" then the output is in a human readable format,
     if not then the output is in csv format.
-    :return: A string containing the current temperature, air pressure, humidity, gas resistance and air quality.
+    :param calculate_air_quality: Boolean value deciding whether or not to calculate and include air quality. If this
+    is true then a burn in period is needed.
+    :return: A string containing the requested data.
     """
+    # Using a 5 minute burn in period to optimize the accuracy of air quality data.
+    if calculate_air_quality:
+        # Start time and current time are used to to handle the burn in time of 5 minutes.
+        start_time = time.time()
+        curr_time = time.time()
+        burn_in_time = 300
+
+        burn_in_data = []
+
+        # Collect gas resistance burn-in values, then use the average of the last 50 values to set the upper limit
+        # for calculating gas_baseline.
+        while curr_time - start_time < burn_in_time:
+            curr_time = time.time()
+            if sensor.get_sensor_data() and sensor.data.heat_stable:
+                gas = sensor.data.gas_resistance
+                burn_in_data.append(gas)
+                time.sleep(1)
+
+        gas_baseline = sum(burn_in_data[-50:]) / 50.0
+
     output = ""
 
     if sensor.get_sensor_data():
+        temperature = sensor.data.temperature
+        pressure = sensor.data.pressure
+        humidity = sensor.data.humidity
+
         # We configure the output based on the command line argument.
         if output_mode == "readable":
             # Readable format.
-            output += f"{sensor.data.temperature:.2f} C, {sensor.data.pressure:.2f} hPa, {sensor.data.humidity:.2f} %RH"
+            output += f"{temperature:.2f} C, {pressure:.2f} hPa, {humidity:.2f} %RH"
         else:
             # csv format.
-            output += f"{sensor.data.temperature:.2f},{sensor.data.pressure:.2f},{sensor.data.humidity:.2f}"
+            output += f"{temperature:.2f},{pressure:.2f},{humidity:.2f}"
 
         # Since the gas resistance data is dependant on the hot plate we ensure that it is stable before reading.
         if sensor.data.heat_stable:
+            gas_resistance = sensor.data.gas_resistance
             if output_mode == "readable":
                 # Readable format.
-                output += f", {sensor.data.gas_resistance} Ohms\n"
+                output += f", {gas_resistance} Ohms"
+
+                if calculate_air_quality:
+                    output += f", {get_air_quality(gas_resistance, humidity, gas_baseline)}%\n"
+                else:
+                    output += "\n"
             else:
                 # csv format.
-                output += f",{sensor.data.gas_resistance}\n"
+                output += f",{gas_resistance}\n"
+
+                if calculate_air_quality:
+                    output += f",{get_air_quality(gas_resistance, humidity, gas_baseline)}\n"
+                else:
+                    output += "\n"
         else:
             output += "\n"
 
@@ -65,8 +102,54 @@ def get_sensor_data(output_mode):
 
 
 # TODO: Add air quality to both outputs. Could be done by adding an "get_air_quality" function.
-def get_air_quality(gas_resistance, humidity):
-    pass
+def get_air_quality(gas_resistance, humidity, gas_baseline):
+    """
+    Runs the sensor for a burn-in period, then uses a combination of relative humidity and gas resistance
+    to estimate indoor air quality as a percentage.
+
+    :param gas_resistance: Current gas resistance from the bme680 sensor.
+    :param humidity: Current humidity from the bme680 sensor.
+    :param gas_baseline: The gas baseline obtained from the burn in period.
+    :return: Air quality based on the gas resistance and humidity.
+    """
+
+    # Set the humidity baseline to 40%, an optimal indoor humidity.
+    hum_baseline = 40.0
+
+    # This sets the balance between humidity and gas reading in the calculation of air_quality_score
+    # (25:75, humidity:gas)
+    hum_weighting = 0.25
+
+    gas = gas_resistance
+    gas_offset = gas_baseline - gas
+
+    hum = humidity
+    hum_offset = hum - hum_baseline
+
+    # Calculate hum_score as the distance from the hum_baseline.
+    if hum_offset > 0:
+        hum_score = (100 - hum_baseline - hum_offset)
+        hum_score /= (100 - hum_baseline)
+        hum_score *= (hum_weighting * 100)
+
+    else:
+        hum_score = (hum_baseline + hum_offset)
+        hum_score /= hum_baseline
+        hum_score *= (hum_weighting * 100)
+
+    # Calculate gas_score as the distance from the gas_baseline.
+    if gas_offset > 0:
+        gas_score = (gas / gas_baseline)
+        gas_score *= (100 - (hum_weighting * 100))
+
+    else:
+        gas_score = 100 - (hum_weighting * 100)
+
+    # Calculate air_quality_score.
+    air_quality_score = hum_score + gas_score
+
+    return air_quality_score
+
 
 # TODO: Handle csv header elsewhere.
 # TODO: Put the data in a file.
