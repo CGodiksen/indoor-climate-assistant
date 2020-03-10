@@ -61,11 +61,11 @@ def get_sensor_data(output_mode, gas_baseline):
             gas_resistance = sensor.data.gas_resistance
             if output_mode == "readable":
                 # Readable format.
-                output += ", {0} Ohms, {1}%".format(gas_resistance,
-                                                    get_air_quality(gas_resistance, humidity, gas_baseline))
+                output += ", {0} Ohms, {1:.2f}%".format(gas_resistance,
+                                                        get_air_quality(gas_resistance, humidity, gas_baseline))
             else:
                 # csv format.
-                output += ",{0},{1}".format(gas_resistance, get_air_quality(gas_resistance, humidity, gas_baseline))
+                output += ",{0},{1:.2f}".format(gas_resistance, get_air_quality(gas_resistance, humidity, gas_baseline))
 
     return output
 
@@ -145,9 +145,10 @@ def burn_in_sensor(burn_in_time=300):
 
 
 if __name__ == '__main__':
+    gas_baseline = burn_in_sensor()
     try:
         while True:
-            print(get_sensor_data("readable", burn_in_sensor()))
+            print(get_sensor_data("readable", gas_baseline))
 
             time.sleep(1)
     except KeyboardInterrupt:
