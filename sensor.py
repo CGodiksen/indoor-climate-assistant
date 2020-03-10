@@ -2,11 +2,8 @@
 This file contains the code for extracting data from the bme680 sensor. The file should be run from the
 raspberry pi that is connected to the sensor.
 
-The file can be run in two different modes:
-readable: Outputting the data with supportive notation that helps in understanding the output.
-csv (standard): Outputting only the pure data as to minimize the size of the output.
-
-The file outputs temperature (C), air pressure (hPa), humidity (%RH), gas resistance (Ohms) and air quality (%).
+The file outputs a list of data that simplifies the process of inserting the data into a database. The output consists
+of temperature (C), air pressure (hPa), humidity (%RH), gas resistance (Ohms) and air quality (%).
 """
 import bme680
 import time
@@ -31,41 +28,31 @@ sensor.set_gas_heater_duration(150)
 sensor.select_gas_heater_profile(0)
 
 
-def get_sensor_data(output_mode, gas_baseline):
+def get_sensor_data(gas_baseline):
     """
     Uses the bme680 sensor to find and output the data that the sensor supports. This includes temperature (C),
     air pressure (hPa), humidity (%RH), gas resistance (Ohms) and air quality (%).
 
-    :param output_mode: The format of the output data, if "readable" then the output is in a human readable format,
-    if not then the output is in csv format.
     :param gas_baseline: The gas baseline obtained from the burn in period.
     :return: A string containing all data in the requested format.
     """
-    output = ""
+    output = []
 
     if sensor.get_sensor_data():
-        temperature = sensor.data.temperature
-        pressure = sensor.data.pressure
+        # Saving humidity so it can be used for calculating air quality.
         humidity = sensor.data.humidity
 
-        # We configure the output based on the command line argument.
-        if output_mode == "readable":
-            # Readable format.
-            output += "{0:.2f} C, {1:.2f} hPa, {2:.2f} %RH".format(temperature, pressure, humidity)
-        else:
-            # csv format.
-            output += "{0:.2f},{1:.2f},{2:.2f}".format(temperature, pressure, humidity)
+        output.append(sensor.data.temperature)
+        output.append(sensor.data.pressure)
+        output.append(humidity)
 
         # Since the gas resistance data is dependant on the hot plate we ensure that it is stable before reading.
         if sensor.data.heat_stable:
-            gas_resistance = sensor.data.gas_resistance
-            if output_mode == "readable":
-                # Readable format.
-                output += ", {0} Ohms, {1:.2f}%".format(gas_resistance,
-                                                        get_air_quality(gas_resistance, humidity, gas_baseline))
-            else:
-                # csv format.
-                output += ",{0},{1:.2f}".format(gas_resistance, get_air_quality(gas_resistance, humidity, gas_baseline))
+            # Saving gas resistance so it can be used for calculating air quality.
+            gas_resistance = int(sensor.data.gas_resistance)
+
+            output.append(gas_resistance)
+            output.append(get_air_quality(gas_resistance, humidity, gas_baseline))
 
     return output
 
@@ -148,7 +135,7 @@ if __name__ == '__main__':
     gas_baseline = burn_in_sensor()
     try:
         while True:
-            print(get_sensor_data("readable", gas_baseline))
+            print(get_sensor_data(gas_baseline))
 
             time.sleep(1)
     except KeyboardInterrupt:
