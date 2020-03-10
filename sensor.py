@@ -118,11 +118,17 @@ def get_air_quality(gas_resistance, humidity, gas_baseline):
     return air_quality_score
 
 
-if __name__ == '__main__':
+def burn_in_sensor(burn_in_time=300):
+    """
+    Warms up the sensor for the specified amount of time to optimize the gas resistance data readings.
+
+    :param burn_in_time: The amount of time in seconds that the sensor should use to warm up.
+    The recommend time is 5 minutes for optimal results.
+    :return: A gas baseline that can be used for calculating air quality.
+    """
     # Start time and current time are used to to handle the burn in time of 5 minutes.
     start_time = time.time()
     curr_time = time.time()
-    burn_in_time = 300
 
     burn_in_data = []
 
@@ -135,11 +141,13 @@ if __name__ == '__main__':
             burn_in_data.append(gas)
             time.sleep(1)
 
-    gas_baseline_50 = sum(burn_in_data[-50:]) / 50.0
+    return sum(burn_in_data[-50:]) / 50.0
 
+
+if __name__ == '__main__':
     try:
         while True:
-            print(get_sensor_data("readable", gas_baseline_50))
+            print(get_sensor_data("readable", burn_in_sensor()))
 
             time.sleep(1)
     except KeyboardInterrupt:
