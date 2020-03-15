@@ -129,16 +129,3 @@ def burn_in_sensor(burn_in_time=300):
             time.sleep(1)
 
     return sum(burn_in_data[-50:]) / 50.0
-
-
-if __name__ == '__main__':
-    gas_baseline = burn_in_sensor()
-    try:
-        while True:
-            print(get_sensor_data(gas_baseline))
-
-            time.sleep(1)
-    except KeyboardInterrupt:
-        pass
-# TODO: Handle csv header elsewhere.
-# TODO: Put the data in a file.
