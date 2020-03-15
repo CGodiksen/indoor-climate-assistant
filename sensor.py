@@ -1,9 +1,8 @@
 """
-This file contains the code for extracting data from the bme680 sensor. The file should be run from the
-raspberry pi that is connected to the sensor.
+This file contains the code for extracting data from the bme680 sensor. The file outputs a list of data that simplifies
+the process of inserting the data into a database.
 
-The file outputs a list of data that simplifies the process of inserting the data into a database. The output consists
-of temperature (C), air pressure (hPa), humidity (%RH), gas resistance (Ohms) and air quality (%).
+The output consists of temperature (C), air pressure (hPa), humidity (%RH), gas resistance (Ohms) and air quality (%).
 """
 import bme680
 import time
