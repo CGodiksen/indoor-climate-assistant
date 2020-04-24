@@ -5,6 +5,7 @@ functions for querying that support the temperature and air quality warnings tog
 insertion of data.
 """
 import psycopg2
+import json
 
 
 def get_database_connection():
@@ -13,16 +14,21 @@ def get_database_connection():
     each need a connection.
     :return: A database connection to the AQT assistant database that is running on the Raspberry pi zero.
     """
-    try:
-        return psycopg2.connect(user="pi",
-                                # TODO: Put this password in a config file that is not on github.
-                                password="***REMOVED***",
-                                host="***REMOVED***",
-                                port="***REMOVED***",
-                                database="aqtassistant")
 
-    except (Exception, psycopg2.Error) as pg_error:
-        print("Error while working with PostgreSQL" + pg_error)
+    # Pulling the database settings from the config file.
+    with open("database_config.json", "r") as config:
+        config_dict = json.load(config)
+
+        try:
+            return psycopg2.connect(user=config_dict["user"],
+                                    # TODO: Change password.
+                                    password=config_dict["password"],
+                                    host=config_dict["host"],
+                                    port=config_dict["port"],
+                                    database=[config_dict["database"]])
+
+        except (Exception, psycopg2.Error) as pg_error:
+            print("Error while working with PostgreSQL" + pg_error)
 
 
 def insert_sensor_data(data, connection, cursor):

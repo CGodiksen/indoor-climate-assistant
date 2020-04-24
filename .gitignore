@@ -572,3 +572,5 @@ healthchecksdb
 MigrationBackup/
 
 .idea/
+
+pi_bme680/database_config.json
