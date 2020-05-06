@@ -573,4 +573,4 @@ MigrationBackup/
 
 .idea/
 
-pi_bme680/database_config.json
+database/database_config.json

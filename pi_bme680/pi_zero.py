@@ -2,7 +2,7 @@
 This file should be run from the Raspberry pi zero that is connected to the bme680 sensor. Running this file starts an
 infinite loop that inserts data into the PostgreSQL database.
 """
-import database
+from database import database
 import sensor
 import time
 
