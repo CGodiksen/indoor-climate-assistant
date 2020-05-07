@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>AQT Assistant</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="PlotWidget" name="graphWidget" native="true">
@@ -19,9 +19,166 @@
      <rect>
       <x>20</x>
       <y>20</y>
-      <width>1141</width>
+      <width>961</width>
       <height>561</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="dataComboBox">
+    <property name="geometry">
+     <rect>
+      <x>1000</x>
+      <y>60</y>
+      <width>131</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <item>
+     <property name="text">
+      <string>Air Quality</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Temperature</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Air Pressure</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Gas Resistance</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Humidity</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="timeframeComboBox">
+    <property name="geometry">
+     <rect>
+      <x>1000</x>
+      <y>160</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <item>
+     <property name="text">
+      <string>Now</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Today</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>This Week</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>This Month</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>This Year</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>All Time</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>1000</x>
+      <y>40</y>
+      <width>47</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Data:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>1000</x>
+      <y>140</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Timeframe:</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="airQualityWarning">
+    <property name="geometry">
+     <rect>
+      <x>1000</x>
+      <y>320</y>
+      <width>161</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Air Quality Warning</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="temperatureWarning">
+    <property name="geometry">
+     <rect>
+      <x>1000</x>
+      <y>360</y>
+      <width>181</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Temperature Warning</string>
     </property>
    </widget>
   </widget>
