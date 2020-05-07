@@ -54,6 +54,15 @@ class Database:
         # Committing the changes to the database, hereby ending the transaction.
         self.connection.commit()
 
+    def get_sensor_data(self, column_names, number_rows):
+
+        pg_select_query = "select " + column_names + " from livingroom"
+
+        self.cursor.execute(pg_select_query)
+
+        # TODO: Probably pretty inefficient when there is a large number of rows in the table.
+        return self.cursor.fetchall()[-number_rows:]
+
     def close(self):
         """Closes the connection and the cursor."""
         self.connection.close()
