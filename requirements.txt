@@ -1,4 +1,7 @@
 bme680==1.0.5
+numpy==1.18.4
 psycopg2==2.8.5
 PyQt5==5.14.2
 PyQt5-sip==12.7.2
+PyQt5-stubs==5.14.2.2
+pyqtgraph==0.10.0

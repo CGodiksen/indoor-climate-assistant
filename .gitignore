@@ -573,4 +573,4 @@ MigrationBackup/
 
 .idea/
 
-database/database_config.json
+database_config.json

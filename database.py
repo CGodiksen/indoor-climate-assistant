@@ -25,10 +25,10 @@ def get_database_connection():
                                     password=config_dict["password"],
                                     host=config_dict["host"],
                                     port=config_dict["port"],
-                                    database=[config_dict["database"]])
+                                    database=config_dict["database"])
 
         except (Exception, psycopg2.Error) as pg_error:
-            print("Error while working with PostgreSQL" + pg_error)
+            print("Error while working with PostgreSQL" + str(pg_error))
 
 
 def insert_sensor_data(data, connection, cursor):
