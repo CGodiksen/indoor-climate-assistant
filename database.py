@@ -8,40 +8,53 @@ import psycopg2
 import json
 
 
-def get_database_connection():
-    """
-    Function that makes database connections easier to work with since there is multiple functions that
-    each need a connection.
-    :return: A database connection to the AQT assistant database that is running on the Raspberry pi zero.
-    """
+class Database:
+    def __init__(self):
+        # Creating a connection to the PostgreSQL database.
+        self.connection = self.get_database_connection()
 
-    # Pulling the database settings from the config file.
-    with open("database_config.json", "r") as config:
-        config_dict = json.load(config)
+        # Creating a cursor object that can be used for INSERT statements.
+        self.cursor = self.connection.cursor()
 
-        try:
-            return psycopg2.connect(user=config_dict["user"],
-                                    # TODO: Change password.
-                                    password=config_dict["password"],
-                                    host=config_dict["host"],
-                                    port=config_dict["port"],
-                                    database=config_dict["database"])
+    @staticmethod
+    def get_database_connection():
+        """
+        Function that makes database connections easier to work with since there is multiple functions that
+        each need a connection.
+        :return: A database connection to the AQT assistant database that is running on the Raspberry pi zero.
+        """
 
-        except (Exception, psycopg2.Error) as pg_error:
-            print("Error while working with PostgreSQL" + str(pg_error))
+        # Pulling the database settings from the config file.
+        with open("database_config.json", "r") as config:
+            config_dict = json.load(config)
 
+            try:
+                return psycopg2.connect(user=config_dict["user"],
+                                        # TODO: Change password.
+                                        password=config_dict["password"],
+                                        host=config_dict["host"],
+                                        port=config_dict["port"],
+                                        database=config_dict["database"])
 
-def insert_sensor_data(data, connection, cursor):
-    """
-    Inserts a single data measurement into the LivingRoom table. We only insert temperate, air pressure, humidity,
-    gas resistance and air quality since time is handled by the default value (now()) and the id is auto incrementing.
-    :return:
-    """
-    # Creating the INSERT query that insert the data into the LivingRoom table.
-    pg_insert_query = "insert into livingroom values (%s, %s, %s, %s, %s)"
+            except (Exception, psycopg2.Error) as pg_error:
+                print("Error while working with PostgreSQL" + str(pg_error))
 
-    # Executing the query while also replacing the placeholders in the query with the actual data.
-    cursor.execute(pg_insert_query, data)
+    def insert_sensor_data(self, data):
+        """
+        Inserts a single data measurement into the LivingRoom table. We only insert temperate, air pressure, humidity,
+        gas resistance and air quality since time is handled by the default value (now()) and the id is auto incrementing.
+        :return:
+        """
+        # Creating the INSERT query that insert the data into the LivingRoom table.
+        pg_insert_query = "insert into livingroom values (%s, %s, %s, %s, %s)"
 
-    # Committing the changes to the database, hereby ending the transaction.
-    connection.commit()
+        # Executing the query while also replacing the placeholders in the query with the actual data.
+        self.cursor.execute(pg_insert_query, data)
+
+        # Committing the changes to the database, hereby ending the transaction.
+        self.connection.commit()
+
+    def close(self):
+        """Closes the connection and the cursor."""
+        self.connection.close()
+        self.cursor.close()

@@ -104,7 +104,7 @@ def get_air_quality(gas_resistance, humidity, gas_baseline):
     return air_quality_score
 
 
-def burn_in_sensor(burn_in_time=1):
+def burn_in_sensor(burn_in_time=300):
     """
     Warms up the sensor for the specified amount of time to optimize the gas resistance data readings.
 
