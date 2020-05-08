@@ -14,16 +14,6 @@
    <string>AQT Assistant</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="PlotWidget" name="graphWidget" native="true">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>961</width>
-      <height>561</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QComboBox" name="dataComboBox">
     <property name="geometry">
      <rect>
@@ -181,6 +171,16 @@
      <string>Temperature Warning</string>
     </property>
    </widget>
+   <widget class="MplWidget" name="graphWidget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>981</width>
+      <height>581</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -196,9 +196,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>PlotWidget</class>
+   <class>MplWidget</class>
    <extends>QWidget</extends>
-   <header>pyqtgraph</header>
+   <header>mplwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -1,7 +1,6 @@
-from PyQt5 import QtWidgets, uic
-from PyQt5.QtCore import QTime, QTimer
-from random import randint
-import pyqtgraph as pg
+import random
+
+from PyQt5 import QtWidgets, uic, QtCore
 import sys
 from database import Database
 
@@ -16,32 +15,30 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.aqtassistant_db = Database()
 
-        self.x = [i for i in range(100)]
-        self.y = [float(row[0]) for row in self.aqtassistant_db.get_sensor_data("temperature", 100)]
+        self.graphWidget.canvas.fig.suptitle("Living room", fontsize=16)
 
-        self.graphWidget.setBackground('w')
+        n_data = 50
+        self.xdata = list(range(n_data))
+        self.ydata = [random.randint(0, 10) for i in range(n_data)]
+        self.graphWidget.canvas.ax.plot(self.xdata, self.ydata, 'r')
+        self.graphWidget.canvas.draw()
 
-        pen = pg.mkPen(color=(255, 0, 0), width=2)
-        self.data_line = self.graphWidget.plot(self.x, self.y, pen=pen)
-
-        self.timer = QTimer()
-        self.timer.setInterval(1000)
+        # Setup a timer to trigger the redraw by calling update_plot.
+        self.timer = QtCore.QTimer()
+        self.timer.setInterval(100)
         self.timer.timeout.connect(self.update_plot)
         self.timer.start()
 
     def update_plot(self):
-        # Remove the first x element.
-        self.x = self.x[1:]
+        # Drop off the first y element, append a new one.
+        self.ydata = self.ydata[1:] + [random.randint(0, 10)]
+        self.graphWidget.canvas.ax.cla()  # Clear the canvas.
+        self.graphWidget.canvas.ax.plot(self.xdata, self.ydata, 'r')
 
-        # Add a new value 1 higher than the last.
-        self.x.append(self.x[-1] + 1)
-
-        # Remove the first y element.
-        self.y = self.y[1:]
-        self.y.append(float(self.aqtassistant_db.get_sensor_data("temperature", 1)[0][0]))
-
-        # Update the data.
-        self.data_line.setData(self.x, self.y)
+        # Trigger the canvas to update and redraw.
+        self.graphWidget.canvas.ax.set_xlabel("Time")
+        self.graphWidget.canvas.ax.set_ylabel("Temperature")
+        self.graphWidget.canvas.draw()
 
 
 def main():
