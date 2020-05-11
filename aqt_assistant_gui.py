@@ -3,6 +3,7 @@ import random
 from PyQt5 import QtWidgets, uic, QtCore
 import sys
 from database import Database
+import matplotlib
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -18,11 +19,19 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphWidget.canvas.fig.suptitle("Living room", fontsize=16)
 
         n_data = 200
-        self.x = list(range(n_data))
-        self.y = [float(temperature[0]) for temperature in
-                  reversed(self.aqtassistant_db.get_sensor_data("temperature", n_data))]
-        self.graphWidget.canvas.ax.plot(self.x, self.y, 'r')
-        self.graphWidget.canvas.draw()
+
+        # Getting the last n rows from the database as a list of tuples with the format (time, temperature)
+        # and reversing the list so they in the correct order.
+        rows = self.aqtassistant_db.get_sensor_data("time, temperature", n_data)[::-1]
+
+        self.x = [row[0] for row in rows]
+        self.y = [float(row[1]) for row in rows]
+
+        # Plotting the data by converting the datetime objects from the database into numbers that matplotlib can plot.
+        self.graphWidget.canvas.ax.plot_date(matplotlib.dates.date2num(self.x), self.y, 'r')
+
+        # Drawing the canvas with all the plot configurations.
+        self.draw_plot()
 
         # Setup a timer to trigger the redraw by calling update_plot.
         self.timer = QtCore.QTimer()
@@ -31,12 +40,21 @@ class MainWindow(QtWidgets.QMainWindow):
         self.timer.start()
 
     def update_plot(self):
-        self.x = self.x[1:] + [self.x[-1] + 1]
-        self.y = self.y[1:] + [float(self.aqtassistant_db.get_sensor_data("temperature", 1)[0][0])]
-        self.graphWidget.canvas.ax.cla()  # Clear the canvas.
-        self.graphWidget.canvas.ax.plot(self.x, self.y, 'r')
+        """Updating the plot with the latest row in the database."""
+        # Getting a tuple with the format (time, temperature).
+        latest = self.aqtassistant_db.get_sensor_data("time, temperature", 1)[0]
 
-        # Trigger the canvas to update and redraw.
+        # Removing the oldest element and adding the latest for both time and temperature.
+        self.x = self.x[1:] + [latest[0]]
+        self.y = self.y[1:] + [float(latest[1])]
+
+        # Clear the canvas.
+        self.graphWidget.canvas.ax.cla()
+
+        # Plotting the data by converting the datetime objects from the database into numbers that matplotlib can plot.
+        self.graphWidget.canvas.ax.plot_date(matplotlib.dates.date2num(self.x), self.y, 'r')
+
+        # Redrawing the canvas with all the plot configurations.
         self.draw_plot()
 
     def draw_plot(self):
