@@ -54,14 +54,19 @@ class Database:
         # Committing the changes to the database, hereby ending the transaction.
         self.connection.commit()
 
-    def get_sensor_data(self, column_names, number_rows):
+    def get_sensor_data(self, column_names, limit):
+        """
+        Retrieves the latest sensor data from the livingroom table according to the settings given in the parameters.
 
-        pg_select_query = "select " + column_names + " from livingroom"
+        :param column_names: The columns that we wish to retrieve.
+        :param limit: The amount of rows that we wish to retrieve.
+        :return:
+        """
+        pg_select_query = "SELECT " + column_names + " FROM livingroom ORDER BY id DESC LIMIT " + str(limit)
 
         self.cursor.execute(pg_select_query)
 
-        # TODO: Probably pretty inefficient when there is a large number of rows in the table.
-        return self.cursor.fetchall()[-number_rows:]
+        return self.cursor.fetchall()
 
     def close(self):
         """Closes the connection and the cursor."""
