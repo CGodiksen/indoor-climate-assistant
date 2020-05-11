@@ -4,6 +4,7 @@ from PyQt5 import QtWidgets, uic, QtCore
 import sys
 from database import Database
 import matplotlib
+import datetime
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -24,7 +25,10 @@ class MainWindow(QtWidgets.QMainWindow):
         # and reversing the list so they in the correct order.
         rows = self.aqtassistant_db.get_sensor_data("time, temperature", n_data)[::-1]
 
-        self.x = [row[0] for row in rows]
+        # Extracting the time from every row and adding two hours to get the correct local time.
+        self.x = [row[0] + datetime.timedelta(hours=2) for row in rows]
+
+        # Extracting the temperature from every row and casting from Decimal to float.
         self.y = [float(row[1]) for row in rows]
 
         # Plotting the data by converting the datetime objects from the database into numbers that matplotlib can plot.
@@ -45,7 +49,7 @@ class MainWindow(QtWidgets.QMainWindow):
         latest = self.aqtassistant_db.get_sensor_data("time, temperature", 1)[0]
 
         # Removing the oldest element and adding the latest for both time and temperature.
-        self.x = self.x[1:] + [latest[0]]
+        self.x = self.x[1:] + [latest[0] + datetime.timedelta(hours=2)]
         self.y = self.y[1:] + [float(latest[1])]
 
         # Clear the canvas.
@@ -58,7 +62,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.draw_plot()
 
     def draw_plot(self):
-        # Since the plot is cleared completely when we clear the canvas we draw the plot with all plot configurations.
+        """Drawing the canvas completely with all canvas specific configurations."""
         self.graphWidget.canvas.ax.set_xlabel("Time")
         self.graphWidget.canvas.ax.set_ylabel("Temperature")
         self.graphWidget.canvas.draw()
