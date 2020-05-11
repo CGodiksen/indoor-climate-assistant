@@ -16,9 +16,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.aqtassistant_db = Database()
 
         self.graphWidget.canvas.fig.suptitle("Living room", fontsize=16)
-        n_data = 50
+
+        n_data = 200
         self.x = list(range(n_data))
-        self.y = [float(temperature[0]) for temperature in self.aqtassistant_db.get_sensor_data("temperature", n_data)]
+        self.y = [float(temperature[0]) for temperature in
+                  reversed(self.aqtassistant_db.get_sensor_data("temperature", n_data))]
         self.graphWidget.canvas.ax.plot(self.x, self.y, 'r')
         self.graphWidget.canvas.draw()
 
@@ -30,7 +32,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def update_plot(self):
         self.x = self.x[1:] + [self.x[-1] + 1]
-        self.y = self.y[1:] + [random.randint(0, 10)]
+        self.y = self.y[1:] + [float(self.aqtassistant_db.get_sensor_data("temperature", 1)[0][0])]
         self.graphWidget.canvas.ax.cla()  # Clear the canvas.
         self.graphWidget.canvas.ax.plot(self.x, self.y, 'r')
 
