@@ -19,11 +19,28 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.graphWidget.canvas.fig.suptitle("Living room", fontsize=16)
 
-        n_data = 200
+        self.x = []
+        self.y = []
+        self.initialize_plot()
+
+        # Initializing an new plot if the data setting is changed.
+
+        # Initializing a new plot if the time frame setting is changed.
+        self.timeFrameComboBox.currentIndexChanged.connect(self.initialize_plot)
+
+        # Setup a timer to trigger the redraw by calling update_plot.
+        self.timer = QtCore.QTimer()
+        self.timer.setInterval(1000)
+        self.timer.timeout.connect(self.update_plot)
+        self.timer.start()
+
+    def initialize_plot(self):
+        """Initialize a plot according to the settings set in the GUI. This is called every time the settings change."""
+        number_rows = self.convert_time_frame(self.timeFrameComboBox.currentText())
 
         # Getting the last n rows from the database as a list of tuples with the format (time, temperature)
         # and reversing the list so they in the correct order.
-        rows = self.aqtassistant_db.get_sensor_data("time, temperature", n_data)[::-1]
+        rows = self.aqtassistant_db.get_sensor_data("time, temperature", number_rows)[::-1]
 
         # Extracting the time from every row and adding two hours to get the correct local time.
         self.x = [row[0] + datetime.timedelta(hours=2) for row in rows]
@@ -36,12 +53,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Drawing the canvas with all the plot configurations.
         self.draw_plot()
-
-        # Setup a timer to trigger the redraw by calling update_plot.
-        self.timer = QtCore.QTimer()
-        self.timer.setInterval(1000)
-        self.timer.timeout.connect(self.update_plot)
-        self.timer.start()
 
     def update_plot(self):
         """Updating the plot with the latest row in the database."""
@@ -66,6 +77,25 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphWidget.canvas.ax.set_xlabel("Time")
         self.graphWidget.canvas.ax.set_ylabel("Temperature")
         self.graphWidget.canvas.draw()
+
+    @staticmethod
+    def convert_time_frame(time_frame):
+        """
+        Converts the time frame from the combobox into an internal value that can be used to query the corresponding
+        amount of rows from the database. The value corresponds to the number of seconds in the time frame.
+
+        :param time_frame: The time frame that we wish to convert into a value.
+        :return: The value that corresponds to the time_frame argument.
+        """
+        return {
+            "Now": 3600,
+            "Today": 86400,
+            "This week": 604800,
+            "This month": 2629744,
+            "This year": 31556926,
+            # Using a number that is large enough to ensure that all rows are queried.
+            "All time": 946707779
+        }[time_frame]
 
 
 def main():

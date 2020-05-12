@@ -54,7 +54,7 @@
      </property>
     </item>
    </widget>
-   <widget class="QComboBox" name="timeframeComboBox">
+   <widget class="QComboBox" name="timeFrameComboBox">
     <property name="geometry">
      <rect>
       <x>1000</x>
@@ -80,22 +80,22 @@
     </item>
     <item>
      <property name="text">
-      <string>This Week</string>
+      <string>This week</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>This Month</string>
+      <string>This month</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>This Year</string>
+      <string>This year</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>All Time</string>
+      <string>All time</string>
      </property>
     </item>
    </widget>
@@ -132,7 +132,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Timeframe:</string>
+     <string>Time frame:</string>
     </property>
    </widget>
    <widget class="QCheckBox" name="airQualityWarning">
