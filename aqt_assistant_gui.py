@@ -24,6 +24,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.initialize_plot()
 
         # Initializing an new plot if the data setting is changed.
+        self.dataComboBox.currentIndexChanged.connect(self.initialize_plot)
 
         # Initializing a new plot if the time frame setting is changed.
         self.timeFrameComboBox.currentIndexChanged.connect(self.initialize_plot)
@@ -36,11 +37,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def initialize_plot(self):
         """Initialize a plot according to the settings set in the GUI. This is called every time the settings change."""
+        # Getting the settings from the GUI and converting them into interval values that can be used for querying.
         number_rows = self.convert_time_frame(self.timeFrameComboBox.currentText())
+        data_name = self.convert_data_name(self.dataComboBox.currentText())
 
         # Getting the last n rows from the database as a list of tuples with the format (time, temperature)
         # and reversing the list so they in the correct order.
-        rows = self.aqtassistant_db.get_sensor_data("time, temperature", number_rows)[::-1]
+        rows = self.aqtassistant_db.get_sensor_data("time, " + data_name, number_rows)[::-1]
 
         # Extracting the time from every row and adding two hours to get the correct local time.
         self.x = [row[0] + datetime.timedelta(hours=2) for row in rows]
@@ -56,8 +59,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def update_plot(self):
         """Updating the plot with the latest row in the database."""
+        data_name = self.convert_data_name(self.dataComboBox.currentText())
+
         # Getting a tuple with the format (time, temperature).
-        latest = self.aqtassistant_db.get_sensor_data("time, temperature", 1)[0]
+        latest = self.aqtassistant_db.get_sensor_data("time, " + data_name, 1)[0]
 
         # Removing the oldest element and adding the latest for both time and temperature.
         self.x = self.x[1:] + [latest[0] + datetime.timedelta(hours=2)]
@@ -75,7 +80,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def draw_plot(self):
         """Drawing the canvas completely with all canvas specific configurations."""
         self.graphWidget.canvas.ax.set_xlabel("Time")
-        self.graphWidget.canvas.ax.set_ylabel("Temperature")
+        self.graphWidget.canvas.ax.set_ylabel(self.dataComboBox.currentText())
         self.graphWidget.canvas.draw()
 
     @staticmethod
@@ -84,7 +89,7 @@ class MainWindow(QtWidgets.QMainWindow):
         Converts the time frame from the combobox into an internal value that can be used to query the corresponding
         amount of rows from the database. The value corresponds to the number of seconds in the time frame.
 
-        :param time_frame: The time frame that we wish to convert into a value.
+        :param time_frame: The time frame that we convert into a value.
         :return: The value that corresponds to the time_frame argument.
         """
         return {
@@ -96,6 +101,23 @@ class MainWindow(QtWidgets.QMainWindow):
             # Using a number that is large enough to ensure that all rows are queried.
             "All time": 946707779
         }[time_frame]
+
+    @staticmethod
+    def convert_data_name(data_name):
+        """
+        Converts the data name from the combobox into an internal value that can be used to query the corresponding
+        columns from the database.
+
+        :param data_name: The data name from the combobox that we convert into a column name.
+        :return: The column name that corresponds to the data_name argument.
+        """
+        return {
+            "Air quality": "airquality",
+            "Temperature": "temperature",
+            "Air pressure": "airpressure",
+            "Gas resistance": "gasresistance",
+            "Humidity": "humidity",
+        }[data_name]
 
 
 def main():

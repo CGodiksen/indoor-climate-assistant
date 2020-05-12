@@ -20,7 +20,7 @@
       <x>1000</x>
       <y>60</y>
       <width>131</width>
-      <height>22</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
@@ -30,7 +30,7 @@
     </property>
     <item>
      <property name="text">
-      <string>Air Quality</string>
+      <string>Air quality</string>
      </property>
     </item>
     <item>
@@ -40,12 +40,12 @@
     </item>
     <item>
      <property name="text">
-      <string>Air Pressure</string>
+      <string>Air pressure</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>Gas Resistance</string>
+      <string>Gas resistance</string>
      </property>
     </item>
     <item>
@@ -60,7 +60,7 @@
       <x>1000</x>
       <y>160</y>
       <width>131</width>
-      <height>21</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
