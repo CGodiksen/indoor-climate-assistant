@@ -11,6 +11,7 @@ import matplotlib
 import datetime
 
 
+# TODO: Plot lines that show the min and max thresholds.
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, *args, **kwargs):

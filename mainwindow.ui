@@ -157,7 +157,7 @@
     <property name="geometry">
      <rect>
       <x>1000</x>
-      <y>360</y>
+      <y>400</y>
       <width>181</width>
       <height>21</height>
      </rect>
@@ -178,6 +178,90 @@
       <y>10</y>
       <width>981</width>
       <height>581</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="aqMinSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>1100</x>
+      <y>350</y>
+      <width>42</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>1000</x>
+      <y>350</y>
+      <width>111</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Min threshold:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>1000</x>
+      <y>430</y>
+      <width>111</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Min threshold:</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="tMinSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>1100</x>
+      <y>430</y>
+      <width>42</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>1000</x>
+      <y>460</y>
+      <width>111</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Max threshold:</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="tMaxSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>1100</x>
+      <y>460</y>
+      <width>42</width>
+      <height>22</height>
      </rect>
     </property>
    </widget>
