@@ -2,7 +2,11 @@ import random
 
 from PyQt5 import QtWidgets, uic, QtCore
 import sys
+
+from PyQt5.QtCore import QThreadPool
+
 from database import Database
+from worker import Worker
 import matplotlib
 import datetime
 
@@ -14,6 +18,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Load the UI Page
         uic.loadUi('mainwindow.ui', self)
+
+        # Setting up the thread pool that will handle the threads that are created when initializing a new plot
+        # and updating the existing plot.
+        self.threadpool = QThreadPool()
 
         self.aqtassistant_db = Database()
 
