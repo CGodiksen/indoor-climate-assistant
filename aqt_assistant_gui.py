@@ -9,6 +9,8 @@ from database import Database
 from worker import Worker
 import matplotlib
 import datetime
+import json
+import os.path
 
 
 # TODO: Plot lines that show the min and max thresholds.
@@ -19,6 +21,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Load the UI Page
         uic.loadUi('mainwindow.ui', self)
+
+        # Loading the GUI settings from the persistent json file if it exists.
+        if os.path.isfile("settings.json"):
+            self.load_settings()
 
         # Setting up the thread pool that will handle the threads that are created when initializing a new plot
         # and updating the existing plot.
@@ -44,6 +50,30 @@ class MainWindow(QtWidgets.QMainWindow):
         self.timer.timeout.connect(self.update_plot)
         self.timer.start()
 
+    def save_settings(self):
+        """Saving the settings from the GUI in a persistent json file."""
+        settings = {
+            "data": self.dataComboBox.currentText(),
+            "time frame": self.timeFrameComboBox.currentText(),
+            "AQ min threshold": self.aqMinSpinBox.value(),
+            "T min threshold": self.tMinSpinBox.value(),
+            "T max threshold": self.tMaxSpinBox.value()
+        }
+
+        with open("settings.json", "w+") as file:
+            json.dump(settings, file)
+
+    def load_settings(self):
+        """Loading the settings from the persistent json file and using it to initialize the GUI."""
+        with open("settings.json", "r+") as file:
+            settings = json.load(file)
+
+        self.dataComboBox.setCurrentIndex(self.dataComboBox.findText(settings["data"]))
+        self.timeFrameComboBox.setCurrentIndex(self.timeFrameComboBox.findText(settings["time frame"]))
+        self.aqMinSpinBox.setValue(settings["AQ min threshold"])
+        self.tMinSpinBox.setValue(settings["T min threshold"])
+        self.tMaxSpinBox.setValue(settings["T max threshold"])
+
     def initialize_plot(self):
         """Initialize a plot according to the settings set in the GUI. This is called every time the settings change."""
         # Getting the settings from the GUI and converting them into interval values that can be used for querying.
@@ -65,6 +95,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Drawing the canvas with all the plot configurations.
         self.draw_plot()
+
+        # Since this is called when the settings change we save the updated settings to the persistent json file.
+        self.save_settings()
 
     def update_plot(self):
         """Updating the plot with the latest row in the database."""
