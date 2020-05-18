@@ -19,4 +19,4 @@ class SystemTray:
         self.tray.setContextMenu(self.menu)
 
     def show_warning(self, title, message):
-        self.tray.showMessage(title, message)
+        self.tray.showMessage(title, message, QIcon("graph_icon.ico"))
