@@ -13,7 +13,7 @@ import json
 import os.path
 
 
-# TODO: Plot lines that show the min and max thresholds.
+# TODO: Make it so thresholds can be decimal.
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, *args, **kwargs):
@@ -38,11 +38,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.y = []
         self.initialize_plot()
 
-        # Initializing an new plot if the data setting is changed.
+        # Initializing a new plot if any of the settings are changed.
         self.dataComboBox.currentIndexChanged.connect(self.initialize_plot)
-
-        # Initializing a new plot if the time frame setting is changed.
         self.timeFrameComboBox.currentIndexChanged.connect(self.initialize_plot)
+        self.aqMinSpinBox.valueChanged.connect(self.initialize_plot)
+        self.tMinSpinBox.valueChanged.connect(self.initialize_plot)
+        self.tMaxSpinBox.valueChanged.connect(self.initialize_plot)
 
         # Setup a timer to trigger the redraw by calling update_plot.
         self.timer = QtCore.QTimer()
@@ -90,9 +91,6 @@ class MainWindow(QtWidgets.QMainWindow):
         # Extracting the temperature from every row and casting from Decimal to float.
         self.y = [float(row[1]) for row in rows]
 
-        # Plotting the data by converting the datetime objects from the database into numbers that matplotlib can plot.
-        self.graphWidget.canvas.ax.plot_date(matplotlib.dates.date2num(self.x), self.y, 'r')
-
         # Drawing the canvas with all the plot configurations.
         self.draw_plot()
 
@@ -113,16 +111,34 @@ class MainWindow(QtWidgets.QMainWindow):
         # Clear the canvas.
         self.graphWidget.canvas.ax.cla()
 
-        # Plotting the data by converting the datetime objects from the database into numbers that matplotlib can plot.
-        self.graphWidget.canvas.ax.plot_date(matplotlib.dates.date2num(self.x), self.y, 'r')
-
         # Redrawing the canvas with all the plot configurations.
         self.draw_plot()
 
     def draw_plot(self):
-        """Drawing the canvas completely with all canvas specific configurations."""
+        """Drawing the plot completely by plotting the data and drawing the canvas specific stuff like labels."""
+        # Plotting the data by converting the datetime objects from the database into numbers that matplotlib can plot.
+        self.graphWidget.canvas.ax.plot_date(matplotlib.dates.date2num(self.x), self.y, 'r')
+
+        data_name = self.dataComboBox.currentText()
+
+        # If we are plotting air quality we draw the min air quality threshold.
+        if data_name == "Air quality":
+            min_line = self.graphWidget.canvas.ax.axhline(y=self.aqMinSpinBox.value(), label="Min threshold")
+
+            self.graphWidget.canvas.ax.legend(handles=[min_line])
+
+        # If we are plotting temperature we draw the min and max temperature thresholds.
+        if data_name == "Temperature":
+            min_line = self.graphWidget.canvas.ax.axhline(y=self.tMinSpinBox.value(), label="Min threshold")
+            max_line = self.graphWidget.canvas.ax.axhline(y=self.tMaxSpinBox.value(), label="Max threshold",
+                                                          color="red")
+
+            self.graphWidget.canvas.ax.legend(handles=[min_line, max_line])
+
+        # Setting the x and y label.
         self.graphWidget.canvas.ax.set_xlabel("Time")
         self.graphWidget.canvas.ax.set_ylabel(self.dataComboBox.currentText())
+
         self.graphWidget.canvas.draw()
 
     @staticmethod
