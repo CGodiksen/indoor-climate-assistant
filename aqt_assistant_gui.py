@@ -13,7 +13,9 @@ import json
 import os.path
 
 
-# TODO: Make it so thresholds can be decimal.
+# TODO: Maybe lock the position of the legend box.
+# TODO: Add warnings when the thresholds are crossed.
+# TODO: Dark mode?
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, *args, **kwargs):

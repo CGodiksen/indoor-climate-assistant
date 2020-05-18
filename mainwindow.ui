@@ -181,16 +181,6 @@
      </rect>
     </property>
    </widget>
-   <widget class="QSpinBox" name="aqMinSpinBox">
-    <property name="geometry">
-     <rect>
-      <x>1100</x>
-      <y>310</y>
-      <width>42</width>
-      <height>22</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
@@ -213,7 +203,7 @@
     <property name="geometry">
      <rect>
       <x>1000</x>
-      <y>390</y>
+      <y>430</y>
       <width>111</width>
       <height>21</height>
      </rect>
@@ -227,21 +217,11 @@
      <string>Min threshold:</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="tMinSpinBox">
-    <property name="geometry">
-     <rect>
-      <x>1100</x>
-      <y>390</y>
-      <width>42</width>
-      <height>22</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
       <x>1000</x>
-      <y>420</y>
+      <y>390</y>
       <width>111</width>
       <height>21</height>
      </rect>
@@ -255,14 +235,67 @@
      <string>Max threshold:</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="tMaxSpinBox">
+   <widget class="QDoubleSpinBox" name="aqMinSpinBox">
     <property name="geometry">
      <rect>
       <x>1100</x>
-      <y>420</y>
-      <width>42</width>
+      <y>310</y>
+      <width>51</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="decimals">
+     <number>1</number>
+    </property>
+    <property name="singleStep">
+     <double>0.500000000000000</double>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="tMinSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>1100</x>
+      <y>430</y>
+      <width>51</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="decimals">
+     <number>1</number>
+    </property>
+    <property name="singleStep">
+     <double>0.500000000000000</double>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="tMaxSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>1100</x>
+      <y>390</y>
+      <width>51</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="wrapping">
+     <bool>false</bool>
+    </property>
+    <property name="frame">
+     <bool>true</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="decimals">
+     <number>1</number>
+    </property>
+    <property name="singleStep">
+     <double>0.500000000000000</double>
     </property>
    </widget>
   </widget>
