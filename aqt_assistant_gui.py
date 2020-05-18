@@ -1,20 +1,17 @@
-import random
-
-from PyQt5 import QtWidgets, uic, QtCore
-import sys
-
-from PyQt5.QtCore import QThreadPool
-
-from database import Database
-from worker import Worker
-import matplotlib
 import datetime
 import json
 import os.path
+import sys
+
+import matplotlib
+from PyQt5 import QtWidgets, uic, QtCore
+from PyQt5.QtCore import QThreadPool
+
+from database import Database
+from system_tray import SystemTray
 
 
 # TODO: Maybe lock the position of the legend box.
-# TODO: Add warnings when the thresholds are crossed.
 # TODO: Dark mode?
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -32,6 +29,10 @@ class MainWindow(QtWidgets.QMainWindow):
         # and updating the existing plot.
         self.threadpool = QThreadPool()
 
+        # Setting up the system tray icon.
+        self.system_tray = SystemTray()
+
+        # Setting up the database object that can be used to query from the livingroom database.
         self.aqtassistant_db = Database()
 
         self.graphWidget.canvas.fig.suptitle("Living room", fontsize=16)
@@ -116,6 +117,9 @@ class MainWindow(QtWidgets.QMainWindow):
         # Redrawing the canvas with all the plot configurations.
         self.draw_plot()
 
+        # Finally we check if the warning thresholds have been crossed and send out a warning if yes.
+        self.check_warnings()
+
     def draw_plot(self):
         """Drawing the plot completely by plotting the data and drawing the canvas specific stuff like labels."""
         # Plotting the data by converting the datetime objects from the database into numbers that matplotlib can plot.
@@ -142,6 +146,31 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphWidget.canvas.ax.set_ylabel(self.dataComboBox.currentText())
 
         self.graphWidget.canvas.draw()
+
+    def check_warnings(self):
+        """Checks if the warning thresholds have been crossed. If so we send a warning to the user."""
+        # Getting the latest air quality and temperature from the database.
+        air_quality, temperature = self.aqtassistant_db.get_sensor_data("airquality, temperature", 1)[0]
+
+        title = ""
+        message = ""
+        # If the air quality is below the min threshold we add it to the warning.
+        if air_quality < self.aqMinSpinBox.value():
+            title += " Low air quality "
+            message += "Air quality is too low: " + str(air_quality) + "%\n"
+
+        # If the temperature is below the min threshold we add it to the warning.
+        if temperature < self.tMinSpinBox.value():
+            title += " Low temperature "
+            message += "Temperature is too low: " + str(temperature) + "°C\n"
+
+        # If the temperature is above the max threshold we add it to the warning.
+        if temperature > self.tMaxSpinBox.value():
+            title += " High temperature "
+            message += "Temperature is too high: " + str(temperature) + "°C\n"
+
+        if title != "" and message != "":
+            self.system_tray.show_warning(title, message)
 
     @staticmethod
     def convert_time_frame(time_frame):
