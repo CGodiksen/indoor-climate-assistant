@@ -10,9 +10,8 @@ from database import Database
 from system_tray import SystemTray
 
 
-# TODO: Maybe lock the position of the legend box.
-# TODO: Dark mode?
 # TODO: Refactor the file structure of the project.
+# TODO: Decrease the margin size of the plot.
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, *args, **kwargs):
@@ -35,7 +34,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # Setting up the database object that can be used to query from the livingroom database.
         self.aqtassistant_db = Database()
 
-        self.graphWidget.canvas.fig.suptitle("Living room", fontsize=16)
+        self.graphWidget.canvas.fig.suptitle("Living room", fontsize=16, color="white")
 
         self.x = []
         self.y = []
@@ -129,27 +128,40 @@ class MainWindow(QtWidgets.QMainWindow):
     def draw_plot(self):
         """Drawing the plot completely by plotting the data and drawing the canvas specific stuff like labels."""
         # Plotting the data by converting the datetime objects from the database into numbers that matplotlib can plot.
-        self.graphWidget.canvas.ax.plot_date(matplotlib.dates.date2num(self.x), self.y, 'r')
+        self.graphWidget.canvas.ax.plot_date(matplotlib.dates.date2num(self.x), self.y, 'r', color="#0088DE")
 
         data_name = self.dataComboBox.currentText()
 
-        # If we are plotting air quality we draw the min air quality threshold.
-        if data_name == "Air quality":
-            min_line = self.graphWidget.canvas.ax.axhline(y=self.aqMinSpinBox.value(), label="Min threshold")
+        if data_name == "Air quality" or data_name == "Temperature":
+            lines = []
+            # If we are plotting air quality we draw the min air quality threshold.
+            if data_name == "Air quality":
+                lines.append(self.graphWidget.canvas.ax.axhline(y=self.aqMinSpinBox.value(), label="Min threshold",
+                                                                color="#225DCF"))
+            # If not, we are plotting temperature so we draw the min and max temperature thresholds.
+            else:
+                lines.append(self.graphWidget.canvas.ax.axhline(y=self.tMinSpinBox.value(), label="Min threshold",
+                                                                color="#225DCF"))
+                lines.append(self.graphWidget.canvas.ax.axhline(y=self.tMaxSpinBox.value(), label="Max threshold",
+                                                                color="red"))
 
-            self.graphWidget.canvas.ax.legend(handles=[min_line])
+            # Setting the legend, including the background and edge color.
+            legend = self.graphWidget.canvas.ax.legend(handles=lines, facecolor="#19232d", edgecolor="#19232d", loc=1)
 
-        # If we are plotting temperature we draw the min and max temperature thresholds.
-        if data_name == "Temperature":
-            min_line = self.graphWidget.canvas.ax.axhline(y=self.tMinSpinBox.value(), label="Min threshold")
-            max_line = self.graphWidget.canvas.ax.axhline(y=self.tMaxSpinBox.value(), label="Max threshold",
-                                                          color="red")
-
-            self.graphWidget.canvas.ax.legend(handles=[min_line, max_line])
+            # Setting the font color of the labels in the legend.
+            for text in legend.get_texts():
+                text.set_color("white")
 
         # Setting the x and y label.
-        self.graphWidget.canvas.ax.set_xlabel("Time")
-        self.graphWidget.canvas.ax.set_ylabel(self.dataComboBox.currentText())
+        self.graphWidget.canvas.ax.set_xlabel("Time", color="white", fontsize=12)
+        self.graphWidget.canvas.ax.set_ylabel(self.dataComboBox.currentText(), color="white", fontsize=12)
+
+        # Setting the color if the axis ticks.
+        self.graphWidget.canvas.ax.tick_params(axis="x", colors="white")
+        self.graphWidget.canvas.ax.tick_params(axis="y", colors="white")
+
+        # Setting the background color of the plot itself.
+        self.graphWidget.canvas.ax.set_facecolor("#19232d")
 
         self.graphWidget.canvas.draw()
 

@@ -14,12 +14,175 @@
    <string>AQT Assistant</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <widget class="MplWidget" name="graphWidget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>981</width>
+      <height>581</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="tWarningCheckBox">
+    <property name="geometry">
+     <rect>
+      <x>990</x>
+      <y>400</y>
+      <width>181</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Temperature Warning</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>990</x>
+      <y>100</y>
+      <width>51</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Data:</string>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="tMinSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>1100</x>
+      <y>480</y>
+      <width>51</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="decimals">
+     <number>1</number>
+    </property>
+    <property name="singleStep">
+     <double>0.500000000000000</double>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>990</x>
+      <y>200</y>
+      <width>101</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Time frame:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>990</x>
+      <y>360</y>
+      <width>101</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Min threshold:</string>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="tMaxSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>1100</x>
+      <y>440</y>
+      <width>51</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="wrapping">
+     <bool>false</bool>
+    </property>
+    <property name="frame">
+     <bool>true</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="decimals">
+     <number>1</number>
+    </property>
+    <property name="singleStep">
+     <double>0.500000000000000</double>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="aqWarningCheckBox">
+    <property name="geometry">
+     <rect>
+      <x>990</x>
+      <y>320</y>
+      <width>171</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Air Quality Warning</string>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="aqMinSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>1100</x>
+      <y>360</y>
+      <width>51</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="decimals">
+     <number>1</number>
+    </property>
+    <property name="singleStep">
+     <double>0.500000000000000</double>
+    </property>
+   </widget>
    <widget class="QComboBox" name="dataComboBox">
     <property name="geometry">
      <rect>
-      <x>1000</x>
-      <y>70</y>
-      <width>131</width>
+      <x>990</x>
+      <y>130</y>
+      <width>151</width>
       <height>31</height>
      </rect>
     </property>
@@ -54,12 +217,48 @@
      </property>
     </item>
    </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>990</x>
+      <y>440</y>
+      <width>101</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Max threshold:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>990</x>
+      <y>480</y>
+      <width>101</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Min threshold:</string>
+    </property>
+   </widget>
    <widget class="QComboBox" name="timeFrameComboBox">
     <property name="geometry">
      <rect>
-      <x>1000</x>
-      <y>170</y>
-      <width>131</width>
+      <x>990</x>
+      <y>230</y>
+      <width>151</width>
       <height>31</height>
      </rect>
     </property>
@@ -98,205 +297,6 @@
       <string>All time</string>
      </property>
     </item>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>1000</x>
-      <y>50</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Data:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>1000</x>
-      <y>150</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Time frame:</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="aqWarningCheckBox">
-    <property name="geometry">
-     <rect>
-      <x>1000</x>
-      <y>280</y>
-      <width>161</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Air Quality Warning</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="tWarningCheckBox">
-    <property name="geometry">
-     <rect>
-      <x>1000</x>
-      <y>360</y>
-      <width>181</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Temperature Warning</string>
-    </property>
-   </widget>
-   <widget class="MplWidget" name="graphWidget" native="true">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>981</width>
-      <height>581</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>1000</x>
-      <y>310</y>
-      <width>111</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Min threshold:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>1000</x>
-      <y>430</y>
-      <width>111</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Min threshold:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_5">
-    <property name="geometry">
-     <rect>
-      <x>1000</x>
-      <y>390</y>
-      <width>111</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Max threshold:</string>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="aqMinSpinBox">
-    <property name="geometry">
-     <rect>
-      <x>1100</x>
-      <y>310</y>
-      <width>51</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-    <property name="decimals">
-     <number>1</number>
-    </property>
-    <property name="singleStep">
-     <double>0.500000000000000</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="tMinSpinBox">
-    <property name="geometry">
-     <rect>
-      <x>1100</x>
-      <y>430</y>
-      <width>51</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-    <property name="decimals">
-     <number>1</number>
-    </property>
-    <property name="singleStep">
-     <double>0.500000000000000</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="tMaxSpinBox">
-    <property name="geometry">
-     <rect>
-      <x>1100</x>
-      <y>390</y>
-      <width>51</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="wrapping">
-     <bool>false</bool>
-    </property>
-    <property name="frame">
-     <bool>true</bool>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-    <property name="decimals">
-     <number>1</number>
-    </property>
-    <property name="singleStep">
-     <double>0.500000000000000</double>
-    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
