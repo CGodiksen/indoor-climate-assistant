@@ -9,7 +9,7 @@ import sensor
 
 if __name__ == '__main__':
     # Creating a connection to the PostgreSQL database.
-    aqtassistant_database = Database()
+    aqtassistant_db = Database()
 
     gas_baseline = sensor.burn_in_sensor()
     # Wrapping the infinite loop in a try-except to support command line keyboard interruption.
@@ -19,9 +19,9 @@ if __name__ == '__main__':
             data = sensor.get_sensor_data(gas_baseline)
 
             # Inserting the data into the database.
-            aqtassistant_database.insert_sensor_data(data)
+            aqtassistant_db.insert_sensor_data(data)
 
-            time.sleep(1)
+            time.sleep(60)
     except KeyboardInterrupt:
         # Closing the database connection if execution is halted.
-        aqtassistant_database.close()
+        aqtassistant_db.close()

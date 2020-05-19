@@ -10,7 +10,6 @@ from database import Database
 from system_tray import SystemTray
 
 
-# TODO: Refactor the file structure of the project.
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, *args, **kwargs):
@@ -46,11 +45,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.tMinSpinBox.valueChanged.connect(self.initialize_plot)
         self.tMaxSpinBox.valueChanged.connect(self.initialize_plot)
 
-        # Setup a timer to trigger the redraw by calling update_plot.
-        self.timer = QtCore.QTimer()
-        self.timer.setInterval(1000)
-        self.timer.timeout.connect(self.update_plot)
-        self.timer.start()
+        # Setup a timer to trigger the redraw every minute by calling update_plot.
+        self.update_plot_timer = QtCore.QTimer()
+        self.update_plot_timer.setInterval(60000)
+        self.update_plot_timer.timeout.connect(self.update_plot)
+        self.update_plot_timer.start()
+
+        # Setup a timer to trigger the warning check every 10 minutes.
+        self.warning_check_timer = QtCore.QTimer()
+        self.warning_check_timer.setInterval(600000)
+        self.warning_check_timer.timeout.connect(self.check_warnings)
+        self.warning_check_timer.start()
 
     def save_settings(self):
         """Saving the settings from the GUI in a persistent json file."""
@@ -96,6 +101,9 @@ class MainWindow(QtWidgets.QMainWindow):
         # Extracting the temperature from every row and casting from Decimal to float.
         self.y = [float(row[1]) for row in rows]
 
+        # Clear the canvas.
+        self.graphWidget.canvas.ax.cla()
+
         # Drawing the canvas with all the plot configurations.
         self.draw_plot()
 
@@ -118,9 +126,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Redrawing the canvas with all the plot configurations.
         self.draw_plot()
-
-        # Finally we check if the warning thresholds have been crossed and send out a warning if yes.
-        self.check_warnings()
 
     def draw_plot(self):
         """Drawing the plot completely by plotting the data and drawing the canvas specific stuff like labels."""
@@ -196,17 +201,17 @@ class MainWindow(QtWidgets.QMainWindow):
     def convert_time_frame(time_frame):
         """
         Converts the time frame from the combobox into an internal value that can be used to query the corresponding
-        amount of rows from the database. The value corresponds to the number of seconds in the time frame.
+        amount of rows from the database. The value corresponds to the number of minutes in the time frame.
 
         :param time_frame: The time frame that we convert into a value.
         :return: The value that corresponds to the time_frame argument.
         """
         return {
-            "Now": 3600,
-            "Today": 86400,
-            "This week": 604800,
-            "This month": 2629744,
-            "This year": 31556926,
+            "Now": 60,
+            "Today": 1440,
+            "This week": 10080,
+            "This month": 43829,
+            "This year": 525949,
             # Using a number that is large enough to ensure that all rows are queried.
             "All time": 946707779
         }[time_frame]
