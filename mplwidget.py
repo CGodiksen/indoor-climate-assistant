@@ -15,6 +15,7 @@ class MplCanvas(Canvas):
     def __init__(self):
         self.fig = Figure(facecolor="#19232d")
         self.ax = self.fig.add_subplot(111)
+        self.fig.set_tight_layout(True)
         Canvas.__init__(self, self.fig)
         Canvas.setSizePolicy(self, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         Canvas.updateGeometry(self)

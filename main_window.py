@@ -11,7 +11,6 @@ from system_tray import SystemTray
 
 
 # TODO: Refactor the file structure of the project.
-# TODO: Decrease the margin size of the plot.
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, *args, **kwargs):
@@ -33,8 +32,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Setting up the database object that can be used to query from the livingroom database.
         self.aqtassistant_db = Database()
-
-        self.graphWidget.canvas.fig.suptitle("Living room", fontsize=16, color="white")
 
         self.x = []
         self.y = []

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1184</width>
+    <width>1203</width>
     <height>647</height>
    </rect>
   </property>
@@ -63,7 +63,7 @@
    <widget class="QDoubleSpinBox" name="tMinSpinBox">
     <property name="geometry">
      <rect>
-      <x>1100</x>
+      <x>1110</x>
       <y>480</y>
       <width>51</width>
       <height>22</height>
@@ -118,7 +118,7 @@
    <widget class="QDoubleSpinBox" name="tMaxSpinBox">
     <property name="geometry">
      <rect>
-      <x>1100</x>
+      <x>1110</x>
       <y>440</y>
       <width>51</width>
       <height>22</height>
@@ -161,7 +161,7 @@
    <widget class="QDoubleSpinBox" name="aqMinSpinBox">
     <property name="geometry">
      <rect>
-      <x>1100</x>
+      <x>1110</x>
       <y>360</y>
       <width>51</width>
       <height>22</height>
@@ -304,7 +304,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1184</width>
+     <width>1203</width>
      <height>21</height>
     </rect>
    </property>
