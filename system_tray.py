@@ -9,7 +9,7 @@ class SystemTray:
     def __init__(self):
         # Setting up the system tray icon itself.
         self.tray = QSystemTrayIcon()
-        self.tray.setIcon(QIcon("graph_icon.ico"))
+        self.tray.setIcon(QIcon("resources/graph_icon.ico"))
         self.tray.setVisible(True)
 
         # Creating the menu.
@@ -19,4 +19,4 @@ class SystemTray:
         self.tray.setContextMenu(self.menu)
 
     def show_warning(self, title, message):
-        self.tray.showMessage(title, message, QIcon("graph_icon.ico"))
+        self.tray.showMessage(title, message, QIcon("resources/graph_icon.ico"))

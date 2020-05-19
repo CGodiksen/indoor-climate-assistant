@@ -1,7 +1,6 @@
 import datetime
 import json
 import os.path
-import sys
 
 import matplotlib
 from PyQt5 import QtWidgets, uic, QtCore
@@ -21,10 +20,10 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
 
         # Load the UI Page
-        uic.loadUi('mainwindow.ui', self)
+        uic.loadUi("resources/mainwindow.ui", self)
 
         # Loading the GUI settings from the persistent json file if it exists.
-        if os.path.isfile("settings.json"):
+        if os.path.isfile("resources/settings.json"):
             self.load_settings()
 
         # Setting up the thread pool that will handle the threads that are created when initializing a new plot
@@ -70,12 +69,12 @@ class MainWindow(QtWidgets.QMainWindow):
             "temperature max threshold": self.tMaxSpinBox.value()
         }
 
-        with open("settings.json", "w+") as file:
+        with open("resources/settings.json", "w+") as file:
             json.dump(settings, file)
 
     def load_settings(self):
         """Loading the settings from the persistent json file and using it to initialize the GUI."""
-        with open("settings.json", "r+") as file:
+        with open("resources/settings.json", "r+") as file:
             settings = json.load(file)
 
         self.dataComboBox.setCurrentIndex(self.dataComboBox.findText(settings["data"]))
@@ -220,14 +219,3 @@ class MainWindow(QtWidgets.QMainWindow):
             "Gas resistance": "gasresistance",
             "Humidity": "humidity",
         }[data_name]
-
-
-def main():
-    app = QtWidgets.QApplication(sys.argv)
-    main_window = MainWindow()
-    main_window.show()
-    sys.exit(app.exec_())
-
-
-if __name__ == '__main__':         
-    main()
