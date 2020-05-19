@@ -135,7 +135,7 @@
      <string>Time frame:</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="airQualityWarning">
+   <widget class="QCheckBox" name="aqWarningCheckBox">
     <property name="geometry">
      <rect>
       <x>1000</x>
@@ -153,7 +153,7 @@
      <string>Air Quality Warning</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="temperatureWarning">
+   <widget class="QCheckBox" name="tWarningCheckBox">
     <property name="geometry">
      <rect>
       <x>1000</x>

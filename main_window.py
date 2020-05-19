@@ -13,7 +13,6 @@ from system_tray import SystemTray
 # TODO: Maybe lock the position of the legend box.
 # TODO: Dark mode?
 # TODO: Refactor the file structure of the project.
-# TODO: Refactor the naming of GUI elements.
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, *args, **kwargs):
@@ -45,9 +44,9 @@ class MainWindow(QtWidgets.QMainWindow):
         # Initializing a new plot if any of the settings are changed.
         self.dataComboBox.currentIndexChanged.connect(self.initialize_plot)
         self.timeFrameComboBox.currentIndexChanged.connect(self.initialize_plot)
-        self.airQualityWarning.toggled.connect(self.initialize_plot)
+        self.aqWarningCheckBox.toggled.connect(self.initialize_plot)
         self.aqMinSpinBox.valueChanged.connect(self.initialize_plot)
-        self.temperatureWarning.toggled.connect(self.initialize_plot)
+        self.tWarningCheckBox.toggled.connect(self.initialize_plot)
         self.tMinSpinBox.valueChanged.connect(self.initialize_plot)
         self.tMaxSpinBox.valueChanged.connect(self.initialize_plot)
 
@@ -62,9 +61,9 @@ class MainWindow(QtWidgets.QMainWindow):
         settings = {
             "data": self.dataComboBox.currentText(),
             "time frame": self.timeFrameComboBox.currentText(),
-            "air quality warning": self.airQualityWarning.isChecked(),
+            "air quality warning": self.aqWarningCheckBox.isChecked(),
             "air quality min threshold": self.aqMinSpinBox.value(),
-            "temperature warning": self.temperatureWarning.isChecked(),
+            "temperature warning": self.tWarningCheckBox.isChecked(),
             "temperature min threshold": self.tMinSpinBox.value(),
             "temperature max threshold": self.tMaxSpinBox.value()
         }
@@ -79,9 +78,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.dataComboBox.setCurrentIndex(self.dataComboBox.findText(settings["data"]))
         self.timeFrameComboBox.setCurrentIndex(self.timeFrameComboBox.findText(settings["time frame"]))
-        self.airQualityWarning.setChecked(settings["air quality warning"])
+        self.aqWarningCheckBox.setChecked(settings["air quality warning"])
         self.aqMinSpinBox.setValue(settings["air quality min threshold"])
-        self.temperatureWarning.setChecked(settings["temperature warning"])
+        self.tWarningCheckBox.setChecked(settings["temperature warning"])
         self.tMinSpinBox.setValue(settings["temperature min threshold"])
         self.tMaxSpinBox.setValue(settings["temperature max threshold"])
 
@@ -163,14 +162,14 @@ class MainWindow(QtWidgets.QMainWindow):
         message = ""
 
         # If the user wants air quality warnings we check it.
-        if self.airQualityWarning.isChecked():
+        if self.aqWarningCheckBox.isChecked():
             # If the air quality is below the min threshold we add it to the warning.
             if air_quality < self.aqMinSpinBox.value():
                 title += " Low air quality "
                 message += "Air quality is too low: " + str(air_quality) + "%\n"
 
         # If the user wants temperature warnings we check it.
-        if self.temperatureWarning.isChecked():
+        if self.tWarningCheckBox.isChecked():
             # If the temperature is below the min threshold we add it to the warning.
             if temperature < self.tMinSpinBox.value():
                 title += " Low temperature "
