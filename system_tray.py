@@ -35,6 +35,20 @@ class SystemTray:
         self.exit_app_action.triggered.connect(self.app.exit)
         self.menu.addAction(self.exit_app_action)
 
+        # Creating an action that toggles the air quality warning.
+        self.aq_warning_action = QAction("Air quality warning")
+        self.aq_warning_action.setCheckable(True)
+        self.aq_warning_action.setChecked(self.main_window.aqWarningCheckBox.isChecked())
+        self.aq_warning_action.toggled.connect(self.main_window.aqWarningCheckBox.setChecked)
+        self.menu.addAction(self.aq_warning_action)
+
+        # Creating an action that toggles the temperature warning.
+        self.t_warning_action = QAction("Temperature warning")
+        self.t_warning_action.setCheckable(True)
+        self.t_warning_action.setChecked(self.main_window.tWarningCheckBox.isChecked())
+        self.t_warning_action.toggled.connect(self.main_window.tWarningCheckBox.setChecked)
+        self.menu.addAction(self.t_warning_action)
+
         # Add the menu to the tray.
         self.tray.setContextMenu(self.menu)
 

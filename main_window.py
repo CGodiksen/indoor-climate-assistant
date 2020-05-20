@@ -28,14 +28,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.y = []
         self.initialize_plot()
 
-        # Initializing a new plot if any of the settings are changed.
+        # Initializing a new plot if any of the plot changing settings are changed.
         self.dataComboBox.currentIndexChanged.connect(self.initialize_plot)
         self.timeFrameComboBox.currentIndexChanged.connect(self.initialize_plot)
-        self.aqWarningCheckBox.toggled.connect(self.initialize_plot)
         self.aqMinSpinBox.valueChanged.connect(self.initialize_plot)
-        self.tWarningCheckBox.toggled.connect(self.initialize_plot)
         self.tMinSpinBox.valueChanged.connect(self.initialize_plot)
         self.tMaxSpinBox.valueChanged.connect(self.initialize_plot)
+
+        # Saving the settings if non plot changing settings are changed.
+        self.aqWarningCheckBox.toggled.connect(self.save_settings)
+        self.tWarningCheckBox.toggled.connect(self.save_settings)
 
         # Setup a timer to trigger the redraw every minute by calling update_plot.
         self.update_plot_timer = QtCore.QTimer()
