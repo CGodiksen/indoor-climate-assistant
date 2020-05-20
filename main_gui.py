@@ -26,7 +26,7 @@ def main():
     main_window = MainWindow(aqt_assistant_db)
 
     # Setting up the system tray icon.
-    system_tray = SystemTray(main_window, aqt_assistant_db)
+    system_tray = SystemTray(main_window, aqt_assistant_db, app)
 
     # setup stylesheet
     app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())

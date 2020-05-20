@@ -7,9 +7,10 @@ class SystemTray:
     """
     Class for creating the icon in the system tray icon.
     """
-    def __init__(self, main_window, database):
+    def __init__(self, main_window, database, app):
         self.main_window = main_window
         self.aqt_assistant_db = database
+        self.app = app
 
         # Setting up the system tray icon itself.
         self.tray = QSystemTrayIcon()
@@ -23,6 +24,16 @@ class SystemTray:
 
         # Creating the menu.
         self.menu = QMenu()
+
+        # Creating an action that opens the main window.
+        self.open_window_action = QAction("Open")
+        self.open_window_action.triggered.connect(self.main_window.show)
+        self.menu.addAction(self.open_window_action)
+
+        # Creating an action that exits the application
+        self.exit_app_action = QAction("Exit")
+        self.exit_app_action.triggered.connect(self.app.exit)
+        self.menu.addAction(self.exit_app_action)
 
         # Add the menu to the tray.
         self.tray.setContextMenu(self.menu)
