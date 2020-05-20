@@ -35,6 +35,9 @@ class SystemTray:
         self.exit_app_action.triggered.connect(self.app.exit)
         self.menu.addAction(self.exit_app_action)
 
+        # Separating the default actions and the application specific actions.
+        self.menu.addSeparator()
+
         # Creating an action that toggles the air quality warning.
         self.aq_warning_action = QAction("Air quality warning")
         self.aq_warning_action.setCheckable(True)
