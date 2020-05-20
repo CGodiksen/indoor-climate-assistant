@@ -6,14 +6,12 @@ import matplotlib
 from PyQt5 import QtWidgets, uic, QtCore
 from PyQt5.QtCore import QThreadPool
 
-from database import Database
-from system_tray import SystemTray
-
 
 class MainWindow(QtWidgets.QMainWindow):
-
-    def __init__(self, *args, **kwargs):
+    def __init__(self, database, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
+
+        self.aqt_assistant_db = database
 
         # Load the UI Page
         uic.loadUi("resources/mainwindow.ui", self)
@@ -25,12 +23,6 @@ class MainWindow(QtWidgets.QMainWindow):
         # Setting up the thread pool that will handle the threads that are created when initializing a new plot
         # and updating the existing plot.
         self.threadpool = QThreadPool()
-
-        # Setting up the system tray icon.
-        self.system_tray = SystemTray()
-
-        # Setting up the database object that can be used to query from the livingroom database.
-        self.aqtassistant_db = Database()
 
         self.x = []
         self.y = []
@@ -50,12 +42,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.update_plot_timer.setInterval(60000)
         self.update_plot_timer.timeout.connect(self.update_plot)
         self.update_plot_timer.start()
-
-        # Setup a timer to trigger the warning check every 10 minutes.
-        self.warning_check_timer = QtCore.QTimer()
-        self.warning_check_timer.setInterval(600000)
-        self.warning_check_timer.timeout.connect(self.check_warnings)
-        self.warning_check_timer.start()
 
     def save_settings(self):
         """Saving the settings from the GUI in a persistent json file."""
@@ -93,7 +79,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Getting the last n rows from the database as a list of tuples with the format (time, temperature)
         # and reversing the list so they in the correct order.
-        rows = self.aqtassistant_db.get_sensor_data("time, " + data_name, number_rows)[::-1]
+        rows = self.aqt_assistant_db.get_sensor_data("time, " + data_name, number_rows)[::-1]
 
         # Extracting the time from every row and adding two hours to get the correct local time.
         self.x = [row[0] + datetime.timedelta(hours=2) for row in rows]
@@ -115,7 +101,7 @@ class MainWindow(QtWidgets.QMainWindow):
         data_name = self.convert_data_name(self.dataComboBox.currentText())
 
         # Getting a tuple with the format (time, temperature).
-        latest = self.aqtassistant_db.get_sensor_data("time, " + data_name, 1)[0]
+        latest = self.aqt_assistant_db.get_sensor_data("time, " + data_name, 1)[0]
 
         # Removing the oldest element and adding the latest for both time and temperature.
         self.x = self.x[1:] + [latest[0] + datetime.timedelta(hours=2)]
@@ -166,36 +152,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphWidget.canvas.ax.set_facecolor("#19232d")
 
         self.graphWidget.canvas.draw()
-
-    def check_warnings(self):
-        """Checks if the warning thresholds have been crossed. If so we send a warning to the user."""
-        # Getting the latest air quality and temperature from the database.
-        air_quality, temperature = self.aqtassistant_db.get_sensor_data("airquality, temperature", 1)[0]
-
-        title = ""
-        message = ""
-
-        # If the user wants air quality warnings we check it.
-        if self.aqWarningCheckBox.isChecked():
-            # If the air quality is below the min threshold we add it to the warning.
-            if air_quality < self.aqMinSpinBox.value():
-                title += " Low air quality "
-                message += "Air quality is too low: " + str(air_quality) + "%\n"
-
-        # If the user wants temperature warnings we check it.
-        if self.tWarningCheckBox.isChecked():
-            # If the temperature is below the min threshold we add it to the warning.
-            if temperature < self.tMinSpinBox.value():
-                title += " Low temperature "
-                message += "Temperature is too low: " + str(temperature) + "°C\n"
-
-            # If the temperature is above the max threshold we add it to the warning.
-            if temperature > self.tMaxSpinBox.value():
-                title += " High temperature "
-                message += "Temperature is too high: " + str(temperature) + "°C\n"
-
-        if title != "" and message != "":
-            self.system_tray.show_warning(title, message)
 
     @staticmethod
     def convert_time_frame(time_frame):
