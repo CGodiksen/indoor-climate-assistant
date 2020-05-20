@@ -10,6 +10,10 @@ import qdarkstyle
 
 
 def main():
+    """
+    Main function for the GUI that sets up the application, main window, database and system tray and starts the
+    even loop. General settings regarding the application is also handled here.
+    """
     app = QtWidgets.QApplication(sys.argv)
     app.setWindowIcon(QtGui.QIcon("resources/graph_icon.ico"))
 

@@ -8,6 +8,9 @@ from PyQt5.QtCore import QThreadPool
 
 
 class MainWindow(QtWidgets.QMainWindow):
+    """
+    Main window that represents the visible window the application runs in.
+    """
     def __init__(self, database, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
 
@@ -79,14 +82,14 @@ class MainWindow(QtWidgets.QMainWindow):
         number_rows = self.convert_time_frame(self.timeFrameComboBox.currentText())
         data_name = self.convert_data_name(self.dataComboBox.currentText())
 
-        # Getting the last n rows from the database as a list of tuples with the format (time, temperature)
-        # and reversing the list so they in the correct order.
+        # Getting the last n rows from the database as a list of tuples with the format (time, data) and reversing
+        # the list so they in the correct order.
         rows = self.aqt_assistant_db.get_sensor_data("time, " + data_name, number_rows)[::-1]
 
         # Extracting the time from every row and adding two hours to get the correct local time.
         self.x = [row[0] + datetime.timedelta(hours=2) for row in rows]
 
-        # Extracting the temperature from every row and casting from Decimal to float.
+        # Extracting the data from every row and casting from Decimal to float.
         self.y = [float(row[1]) for row in rows]
 
         # Clear the canvas.

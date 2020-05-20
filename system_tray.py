@@ -5,7 +5,7 @@ from PyQt5 import QtCore
 
 class SystemTray:
     """
-    Class for creating the icon in the system tray icon.
+    System tray icon that is used to access the application when it is closed.
     """
     def __init__(self, main_window, database, app):
         self.main_window = main_window

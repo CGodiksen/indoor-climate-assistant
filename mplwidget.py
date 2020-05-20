@@ -1,4 +1,3 @@
-"""Defining the matplotlib widget that is used in the gui to display a matplotlib graph."""
 from PyQt5 import QtWidgets
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as Canvas
@@ -8,8 +7,10 @@ import matplotlib
 matplotlib.use('QT5Agg')
 
 
-# Matplotlib canvas class to create figure.
 class MplCanvas(Canvas):
+    """
+    Matplotlib canvas used to create figure.
+    """
     def __init__(self):
         self.fig = Figure(facecolor="#19232d")
         self.ax = self.fig.add_subplot(111)
@@ -19,8 +20,10 @@ class MplCanvas(Canvas):
         Canvas.updateGeometry(self)
 
 
-# Matplotlib widget.
 class MplWidget(QtWidgets.QWidget):
+    """
+    Matplotlib widget that is used in the GUI to display a matplotlib graph.
+    """
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
         self.canvas = MplCanvas()

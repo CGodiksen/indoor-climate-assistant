@@ -9,6 +9,9 @@ import json
 
 
 class Database:
+    """
+    Database that can be used to query from and insert data into the livingroom database table.
+    """
     def __init__(self):
         # Creating a connection to the PostgreSQL database.
         self.connection = self.get_database_connection()
@@ -41,8 +44,9 @@ class Database:
 
     def insert_sensor_data(self, data):
         """
-        Inserts a single data measurement into the LivingRoom table. We only insert temperate, air pressure, humidity,
-        gas resistance and air quality since time is handled by the default value (now()) and the id is auto incrementing.
+        Inserts a single data measurement into the LivingRoom table. We only insert temperate, air pressure,
+        humidity, gas resistance and air quality since time is handled by the default value (now()) and the id is
+        auto incrementing.
         :return:
         """
         # Creating the INSERT query that insert the data into the LivingRoom table.
