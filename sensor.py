@@ -12,6 +12,10 @@ try:
 except IOError:
     sensor = bme680.BME680(bme680.I2C_ADDR_SECONDARY)
 
+# Since the sensor is not factory calibrated we need to add a temperature offset. This also ensures that the
+# correct temperature is used when calculating air pressure and humidity.
+sensor.set_temp_offset(-4)
+
 # Oversample settings set the trade-off between accuracy and noise. Higher oversampling = less noise, less accuracy.
 sensor.set_humidity_oversample(bme680.OS_2X)
 sensor.set_pressure_oversample(bme680.OS_4X)
