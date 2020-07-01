@@ -23,10 +23,6 @@ class MainWindow(QtWidgets.QMainWindow):
         if os.path.isfile("resources/settings.json"):
             self.load_settings()
 
-        # Setting up the thread pool that will handle the threads that are created when initializing a new plot
-        # and updating the existing plot.
-        self.threadpool = QThreadPool()
-
         self.x = []
         self.y = []
         self.initialize_plot()
