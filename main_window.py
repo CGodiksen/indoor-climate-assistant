@@ -4,7 +4,6 @@ import os.path
 
 import matplotlib
 from PyQt5 import QtWidgets, uic, QtCore
-from PyQt5.QtCore import QThreadPool
 
 
 class MainWindow(QtWidgets.QMainWindow):
