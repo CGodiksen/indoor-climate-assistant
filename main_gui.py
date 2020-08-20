@@ -7,6 +7,7 @@ from database import Database
 
 import sys
 import qdarkstyle
+import mplwidget
 
 
 def main():
