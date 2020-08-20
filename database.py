@@ -33,7 +33,6 @@ class Database:
 
             try:
                 return psycopg2.connect(user=config_dict["user"],
-                                        # TODO: Change password.
                                         password=config_dict["password"],
                                         host=config_dict["host"],
                                         port=config_dict["port"],
@@ -58,15 +57,21 @@ class Database:
         # Committing the changes to the database, hereby ending the transaction.
         self.connection.commit()
 
-    def get_sensor_data(self, column_names, limit):
+    def get_sensor_data(self, column_names, limit, condense=False):
         """
         Retrieves the latest sensor data from the livingroom table according to the settings given in the parameters.
 
         :param column_names: The columns that we wish to retrieve.
         :param limit: The amount of rows that we wish to retrieve.
-        :return:
+        :param condense: Flag used to determine whether a condensed select query should be used. If true then instead
+        of returning a data point for each minute within the time frame we instead return a data point for each hour.
+        :return: The data in the database that matches the select query.
         """
-        pg_select_query = "SELECT " + column_names + " FROM livingroom ORDER BY id DESC LIMIT " + str(limit)
+        if condense:
+            pg_select_query = "SELECT " + column_names + " FROM livingroom WHERE id % 60 = 0 ORDER BY id DESC LIMIT " +\
+                              str(limit // 60)
+        else:
+            pg_select_query = "SELECT " + column_names + " FROM livingroom ORDER BY id DESC LIMIT " + str(limit)
 
         self.cursor.execute(pg_select_query)
 

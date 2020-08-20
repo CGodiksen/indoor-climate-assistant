@@ -77,9 +77,15 @@ class MainWindow(QtWidgets.QMainWindow):
         number_rows = self.convert_time_frame(self.timeFrameComboBox.currentText())
         data_name = self.convert_data_name(self.dataComboBox.currentText())
 
+        # If we are retrieving a weeks worth of data or more then we want a data point for each hour instead of data
+        # point for each minute, achieved by setting condense to True.
+        condense = False
+        if number_rows >= 10080:
+            condense = True
+
         # Getting the last n rows from the database as a list of tuples with the format (time, data) and reversing
         # the list so they in the correct order.
-        rows = self.aqt_assistant_db.get_sensor_data("time, " + data_name, number_rows)[::-1]
+        rows = self.aqt_assistant_db.get_sensor_data("time, " + data_name, number_rows, condense)[::-1]
 
         # Extracting the time from every row and adding two hours to get the correct local time.
         self.x = [row[0] + datetime.timedelta(hours=2) for row in rows]
@@ -144,7 +150,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphWidget.canvas.ax.set_xlabel("Time", color="white", fontsize=12)
         self.graphWidget.canvas.ax.set_ylabel(self.dataComboBox.currentText(), color="white", fontsize=12)
 
-        # Setting the color if the axis ticks.
+        # Setting the color of the axis ticks.
         self.graphWidget.canvas.ax.tick_params(axis="x", colors="white")
         self.graphWidget.canvas.ax.tick_params(axis="y", colors="white")
 
