@@ -103,21 +103,26 @@ class MainWindow(QtWidgets.QMainWindow):
         self.save_settings()
 
     def update_plot(self):
-        """Updating the plot with the latest row in the database."""
-        data_name = self.convert_data_name(self.dataComboBox.currentText())
+        """
+        Updating the plot with the latest data from the database if the time frame is "Now" or "Today". Updating the
+        plot with the latest data in any of the other time frames would have an insignificant effect.
+        """
+        time_frame = self.timeFrameComboBox.currentText()
+        if time_frame == "Now" or time_frame == "Today":
+            data_name = self.convert_data_name(self.dataComboBox.currentText())
 
-        # Getting a tuple with the format (time, temperature).
-        latest = self.aqt_assistant_db.get_sensor_data("time, " + data_name, 1)[0]
+            # Getting a tuple with the format (time, temperature).
+            latest = self.aqt_assistant_db.get_sensor_data("time, " + data_name, 1)[0]
 
-        # Removing the oldest element and adding the latest for both time and temperature.
-        self.x = self.x[1:] + [latest[0] + datetime.timedelta(hours=2)]
-        self.y = self.y[1:] + [float(latest[1])]
+            # Removing the oldest element and adding the latest for both time and temperature.
+            self.x = self.x[1:] + [latest[0] + datetime.timedelta(hours=2)]
+            self.y = self.y[1:] + [float(latest[1])]
 
-        # Clear the canvas.
-        self.graphWidget.canvas.ax.cla()
+            # Clear the canvas.
+            self.graphWidget.canvas.ax.cla()
 
-        # Redrawing the canvas with all the plot configurations.
-        self.draw_plot()
+            # Redrawing the canvas with all the plot configurations.
+            self.draw_plot()
 
     def draw_plot(self):
         """Drawing the plot completely by plotting the data and drawing the canvas specific stuff like labels."""
