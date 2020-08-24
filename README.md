@@ -14,3 +14,6 @@ The user interface was created using the QT framework. An example of the user in
 The "Data" combo box lets the user decide what data they want to see in the central graph. Here you can choose between "Air quality", "Temperature", "Air pressure", "Gas resistance" and "Humidity". The "Time frame" combo box is used to decide how much data is shown. "Now" shows the data from the last hour. "Today", "This week", "This month", "This year" and "All time" are the other options. 
 
 The warnings can be toggled on and off using the checkboxes on the bottom right. If toggled on, a windows notification is sent to the user if the data exceeds the chosen thresholds. The thresholds for the warnings can be changed using the spin boxes.
+
+## Installation
+This application is not meant for distribution since setting it up requires a significant amount of work from the individual user. A BME680 sensor connected to a Raspberry Pi is necesarry to retrieve the data and a postgreSQL database is needed to store the data. 
