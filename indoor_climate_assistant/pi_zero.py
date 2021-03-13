@@ -2,10 +2,9 @@
 This file should be run from the Raspberry pi zero that is connected to the bme680 sensor. Running this file starts an
 infinite loop that inserts data into the PostgreSQL database.
 """
-from database import Database
+from indoor_climate_assistant.database import Database
 import time
-import sensor
-
+from indoor_climate_assistant import sensor
 
 if __name__ == '__main__':
     # Creating a connection to the PostgreSQL database.

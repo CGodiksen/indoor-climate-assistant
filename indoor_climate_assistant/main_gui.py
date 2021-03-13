@@ -1,13 +1,12 @@
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWinExtras import QtWin
 
-from main_window import MainWindow
-from system_tray import SystemTray
-from database import Database
+from indoor_climate_assistant.main_window import MainWindow
+from indoor_climate_assistant.system_tray import SystemTray
+from indoor_climate_assistant.database import Database
 
 import sys
 import qdarkstyle
-import mplwidget
 
 
 def main():
