@@ -16,10 +16,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.aqt_assistant_db = database
 
         # Load the UI Page
-        uic.loadUi("resources/mainwindow.ui", self)
+        uic.loadUi("../resources/mainwindow.ui", self)
 
         # Loading the GUI settings from the persistent json file if it exists.
-        if os.path.isfile("resources/settings.json"):
+        if os.path.isfile("../resources/settings.json"):
             self.load_settings()
 
         self.x = []
@@ -55,12 +55,12 @@ class MainWindow(QtWidgets.QMainWindow):
             "temperature max threshold": self.tMaxSpinBox.value()
         }
 
-        with open("resources/settings.json", "w+") as file:
+        with open("../resources/settings.json", "w+") as file:
             json.dump(settings, file)
 
     def load_settings(self):
         """Loading the settings from the persistent json file and using it to initialize the GUI."""
-        with open("resources/settings.json", "r+") as file:
+        with open("../resources/settings.json", "r+") as file:
             settings = json.load(file)
 
         self.dataComboBox.setCurrentIndex(self.dataComboBox.findText(settings["data"]))

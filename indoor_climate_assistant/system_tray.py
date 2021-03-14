@@ -14,7 +14,7 @@ class SystemTray:
 
         # Setting up the system tray icon itself.
         self.tray = QSystemTrayIcon()
-        self.tray.setIcon(QIcon("resources/graph_icon.ico"))
+        self.tray.setIcon(QIcon("../resources/graph_icon.ico"))
         self.tray.setVisible(True)
 
         # Opening the main window when the tray icon is double clicked. We only want to call show() if the activation
@@ -89,4 +89,4 @@ class SystemTray:
                 message += "Temperature is too high: " + str(temperature) + "°C\n"
 
         if title != "" and message != "":
-            self.tray.showMessage(title, message, QIcon("resources/graph_icon.ico"))
+            self.tray.showMessage(title, message, QIcon("../resources/graph_icon.ico"))

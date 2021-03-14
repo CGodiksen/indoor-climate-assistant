@@ -28,7 +28,7 @@ class Database:
         """
 
         # Pulling the database settings from the config file.
-        with open("resources/database_config.json", "r") as config:
+        with open("../resources/database_config.json", "r") as config:
             config_dict = json.load(config)
 
             try:

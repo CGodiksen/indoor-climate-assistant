@@ -15,7 +15,7 @@ def main():
     even loop. General settings regarding the application is also handled here.
     """
     app = QtWidgets.QApplication(sys.argv)
-    app.setWindowIcon(QtGui.QIcon("resources/graph_icon.ico"))
+    app.setWindowIcon(QtGui.QIcon("../resources/graph_icon.ico"))
 
     # Changing the app id so our custom window icon is shown on the toolbar.
     QtWin.setCurrentProcessExplicitAppUserModelID("aqt_assistant.v1.0")
